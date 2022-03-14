@@ -22,12 +22,16 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-jooq'
     implementation 'org.flywaydb:flyway-core'
+    implementation 'com.github.javafaker:javafaker:1.0.2'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'org.postgresql:postgresql'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    annotationProcessor 'org.hibernate:hibernate-jpamodelgen'
 }
 
 flyway {
@@ -35,13 +39,15 @@ flyway {
     user = 'migration_user'
     password = 'password'
     schemas = ['public']
-
+    locations = ['classpath:db/migration']
 
     placeholders = [
             'app_user': 'app_user',
             'migration_user': 'migration_user'
     ]
 }
+
+flywayMigrate.dependsOn classes
 
 tasks.named('test') {
     useJUnitPlatform()

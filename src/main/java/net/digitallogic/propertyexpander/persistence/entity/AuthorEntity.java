@@ -1,14 +1,14 @@
 package net.digitallogic.propertyexpander.persistence.entity;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 
@@ -28,4 +28,8 @@ public class AuthorEntity extends EntityBase<UUID> {
 
 	@Column(name = "email", unique = true, nullable = false)
 	private String email;
+
+	@Builder.Default
+	@ManyToMany(mappedBy = BookEntity_.AUTHORS)
+	private Set<BookEntity> books = new HashSet<>();
 }

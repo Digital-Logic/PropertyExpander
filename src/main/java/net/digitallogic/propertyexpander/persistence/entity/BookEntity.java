@@ -29,7 +29,7 @@ public class BookEntity extends EntityBase<UUID> {
 	private float price;
 
 	@Column(name = "isbn", unique = true, nullable = false)
-	private UUID isbn;
+	private String isbn;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "publisher")

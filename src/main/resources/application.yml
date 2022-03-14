@@ -11,6 +11,8 @@ spring:
         jdbc.time_zone: UTC
   flyway:
     enabled: false
+  jooq:
+    sql-dialect:Postgres
 
 
   datasource:
