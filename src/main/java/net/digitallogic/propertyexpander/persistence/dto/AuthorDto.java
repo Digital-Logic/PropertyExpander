@@ -6,7 +6,6 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import net.digitallogic.propertyexpander.persistence.entity.AuthorEntity;
 import net.digitallogic.propertyexpander.persistence.entity.BookEntity;
-import net.digitallogic.propertyexpander.persistence.entity.BookEntity_;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,30 +52,35 @@ public class AuthorDto extends DtoBase<UUID> {
 	@Data
 	@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
 	@JsonInclude(JsonInclude.Include.NON_EMPTY)
-	private static class _BookDto extends DtoBase<UUID> {
-		private String title;
-		private int totalPages;
-		private float price;
-		private String isbn;
-		private PublisherDto publisherDto;
-		private List<UUID> authors = new ArrayList<>();
+	public static class AuthorDtoLt extends DtoBase<UUID> {
+		private String firstName;
+		private String lastName;
+		private String email;
+		private List<UUID> books = new ArrayList<>();
 
-		public _BookDto(BookEntity entity) {
+		public AuthorDtoLt(AuthorEntity entity) {
 			super(entity);
 
-			this.title = entity.getTitle();
-			this.totalPages = entity.getTotalPages();
-			this.price = entity.getPrice();
-			this.isbn = entity.getIsbn();
+			this.firstName = entity.getFirstName();
+			this.lastName = entity.getLastName();
+			this.email = entity.getEmail();
 
-			if (pu.isLoaded(entity, BookEntity_.PUBLISHER))
-				this.publisherDto = new PublisherDto(entity.getPublisher());
-
-			if (pu.isLoaded(entity, BookEntity_.AUTHORS)) {
-				authors = entity.getAuthors().stream()
-					.map(AuthorEntity::getId)
+			if (pu.isLoaded(entity, "books")) {
+				books = entity.getBooks().stream()
+					.map(BookEntity::getId)
 					.collect(Collectors.toList());
 			}
+		}
+
+		public AuthorDtoLt(AuthorDto dto) {
+			super(dto);
+
+			this.firstName = dto.getFirstName();
+			this.lastName = dto.getLastName();
+			this.email = dto.getEmail();
+			this.books = dto.getBooks().stream()
+				.map(BookDto::getId)
+				.collect(Collectors.toList());
 		}
 	}
 }

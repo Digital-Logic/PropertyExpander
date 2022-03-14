@@ -1,5 +1,6 @@
 package net.digitallogic.propertyexpander.persistence.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import net.digitallogic.propertyexpander.persistence.entity.GenreEntity;
@@ -26,7 +27,17 @@ public class GenreDto extends DtoBase<UUID> {
 		this.name = entity.getName();
 	}
 
-	private static class _BookDto extends DtoBase<UUID> {
+	@Data
+	@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
+	@ToString(callSuper = true, of = {"name"})
+	@JsonInclude(JsonInclude.Include.NON_EMPTY)
+	public static class GenreDtoLt extends DtoBase<UUID> {
+		private String name;
 
+		public GenreDtoLt(GenreEntity entity) {
+			super(entity);
+
+			this.name = entity.getName();
+		}
 	}
 }

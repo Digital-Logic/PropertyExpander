@@ -3,10 +3,10 @@ SET TIME ZONE 'UTC';
 create table book
 (
     id                 uuid        not null primary key,
-    title              varchar(40) not null,
+    title              varchar(80) not null,
     total_pages        int         not null,
     price              float       not null,
-    isbn               varchar(60) not null unique default gen_random_uuid(),
+    isbn               varchar(80) not null unique default gen_random_uuid(),
     published_date     timestamp   not null        default current_timestamp,
     publisher          uuid        not null,
 

@@ -3,6 +3,7 @@ package net.digitallogic.propertyexpander.persistence.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import net.digitallogic.propertyexpander.persistence.dto.GenreDto.GenreDtoLt;
 import net.digitallogic.propertyexpander.persistence.entity.AuthorEntity;
 import net.digitallogic.propertyexpander.persistence.entity.BookEntity;
 import net.digitallogic.propertyexpander.persistence.entity.BookEntity_;
@@ -27,10 +28,10 @@ public class BookDto extends DtoBase<UUID> {
 	private PublisherDto publisher;
 
 	@Builder.Default
-	private List<_AuthorDto> authors = new ArrayList<>();
+	private List<AuthorDto> authors = new ArrayList<>();
 
 	@Builder.Default
-	private List<String> genre = new ArrayList<>();
+	private List<GenreDto> genres = new ArrayList<>();
 
 	public BookDto(BookEntity entity) {
 		super(entity);
@@ -41,7 +42,7 @@ public class BookDto extends DtoBase<UUID> {
 
 		if (pu.isLoaded(entity, BookEntity_.AUTHORS)) {
 			authors = entity.getAuthors().stream()
-				.map(_AuthorDto::new)
+				.map(AuthorDto::new)
 				.collect(Collectors.toList());
 		}
 
@@ -63,23 +64,37 @@ public class BookDto extends DtoBase<UUID> {
 
 	@Data
 	@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
+	@ToString(callSuper = true, of = {"title"})
 	@JsonInclude(JsonInclude.Include.NON_EMPTY)
-	private static class _AuthorDto extends DtoBase<UUID> {
-		private String firstName;
-		private String lastName;
-		private String email;
-		private List<UUID> books = new ArrayList<>();
+	public static class BookDtoLt extends DtoBase<UUID> {
+		private String title;
+		private int totalPages;
+		private float price;
+		private String isbn;
+		private PublisherDto publisherDto;
+		private List<UUID> authors = new ArrayList<>();
+		private List<GenreDtoLt> genres = new ArrayList<>();
 
-		public _AuthorDto(AuthorEntity entity) {
+		public BookDtoLt(BookEntity entity) {
 			super(entity);
 
-			this.firstName = entity.getFirstName();
-			this.lastName = entity.getLastName();
-			this.email = entity.getEmail();
+			this.title = entity.getTitle();
+			this.totalPages = entity.getTotalPages();
+			this.price = entity.getPrice();
+			this.isbn = entity.getIsbn();
 
-			if (pu.isLoaded(entity, "books")) {
-				books = entity.getBooks().stream()
-					.map(BookEntity::getId)
+			if (pu.isLoaded(entity, BookEntity_.PUBLISHER))
+				this.publisherDto = new PublisherDto(entity.getPublisher());
+
+			if (pu.isLoaded(entity, BookEntity_.AUTHORS)) {
+				authors = entity.getAuthors().stream()
+					.map(AuthorEntity::getId)
+					.collect(Collectors.toList());
+			}
+
+			if (pu.isLoaded(entity, BookEntity_.GENRES)) {
+				genres = entity.getGenres().stream()
+					.map(GenreDtoLt::new)
 					.collect(Collectors.toList());
 			}
 		}

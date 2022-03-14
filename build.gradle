@@ -30,6 +30,7 @@ dependencies {
     runtimeOnly 'org.postgresql:postgresql'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.apache.commons:commons-text:1.9'
 
     annotationProcessor 'org.hibernate:hibernate-jpamodelgen'
 }
