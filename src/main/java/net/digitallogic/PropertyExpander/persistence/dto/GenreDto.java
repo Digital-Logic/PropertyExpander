@@ -54,5 +54,13 @@ public class GenreDto extends DtoBase<UUID> {
 					.map(BookEntity::getId)
 					.toList();
 		}
+
+		public GenreDtoLt(GenreDto dto) {
+			super(dto);
+			this.name = dto.getName();
+			this.books = dto.getBooks().stream()
+				.map(BookDto.BookDtoLt::getId)
+				.toList();
+		}
 	}
 }

@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.digitallogic.PropertyExpander.persistence.dto.AuthorDto;
 import net.digitallogic.PropertyExpander.persistence.dto.BookDto;
 import net.digitallogic.PropertyExpander.persistence.dto.GenreDto;
+import net.digitallogic.PropertyExpander.persistence.dto.GenreDto.GenreDtoLt;
 import net.digitallogic.PropertyExpander.persistence.dto.PublisherDto;
 import org.flywaydb.core.api.migration.BaseJavaMigration;
 import org.flywaydb.core.api.migration.Context;
@@ -24,7 +25,7 @@ public class V1_7__InitData extends BaseJavaMigration {
 	private final Clock clock = Clock.systemUTC();
 	private final Random random = new Random();
 
-	public void migrate(Context context) throws Exception {
+	public void migrate(Context context) {
 
 		// Generate Authors
 		List<AuthorDto> authors = new ArrayList<>();
@@ -195,17 +196,21 @@ public class V1_7__InitData extends BaseJavaMigration {
 
 		try (PreparedStatement insert = context.getConnection().prepareStatement(insertBookGenre)) {
 
+			List<GenreDtoLt> genreList = genres.values().stream()
+				.map(GenreDtoLt::new)
+				.toList();
+
 			for (BookDto book : books) {
 				// A single book can have up to 3 genres
 				int numOfGenres = random.nextInt(1, 4);
 
-				book.setGenres(new ArrayList(
+				book.setGenres(new ArrayList<>(
 					IntStream.range(0, numOfGenres)
-						.mapToObj(i -> genres.values().toArray(GenreDto[]::new)[random.nextInt(genres.size())])
+						.mapToObj(i -> genreList.get(random.nextInt(genres.size())))
 						.collect(Collectors.toSet()) 	// Use set to prevent same genre from being selected twice.
 				));
 
-				for (GenreDto.GenreDtoLt g : book.getGenres()) {
+				for (GenreDtoLt g : book.getGenres()) {
 					insert.setObject(1, book.getId());
 					insert.setObject(2, g.getId());
 
