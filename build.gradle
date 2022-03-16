@@ -25,14 +25,17 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-jooq'
     implementation 'org.flywaydb:flyway-core'
     implementation 'com.github.javafaker:javafaker:1.0.2'
+    implementation 'com.google.code.findbugs:jsr305:3.0.2'
+    implementation 'org.apache.commons:commons-text:1.9'
+
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'org.postgresql:postgresql'
-    annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    implementation 'org.apache.commons:commons-text:1.9'
 
+    annotationProcessor 'org.projectlombok:lombok'
     annotationProcessor 'org.hibernate:hibernate-jpamodelgen'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 flyway {

@@ -2,10 +2,10 @@ package db.migration;
 
 import com.github.javafaker.Faker;
 import lombok.extern.slf4j.Slf4j;
-import net.digitallogic.propertyexpander.persistence.dto.AuthorDto;
-import net.digitallogic.propertyexpander.persistence.dto.BookDto;
-import net.digitallogic.propertyexpander.persistence.dto.GenreDto;
-import net.digitallogic.propertyexpander.persistence.dto.PublisherDto;
+import net.digitallogic.PropertyExpander.persistence.dto.AuthorDto;
+import net.digitallogic.PropertyExpander.persistence.dto.BookDto;
+import net.digitallogic.PropertyExpander.persistence.dto.GenreDto;
+import net.digitallogic.PropertyExpander.persistence.dto.PublisherDto;
 import org.flywaydb.core.api.migration.BaseJavaMigration;
 import org.flywaydb.core.api.migration.Context;
 
@@ -167,7 +167,7 @@ public class V1_7__InitData extends BaseJavaMigration {
 				new ArrayList<>(
 					IntStream.range(0, numOfAuthors)
 						.mapToObj(i ->
-							authors.get(random.nextInt(authors.size()))
+							new AuthorDto.AuthorDtoLt(authors.get(random.nextInt(authors.size())))
 						)
 						.collect(Collectors.toSet())
 				));
@@ -176,7 +176,7 @@ public class V1_7__InitData extends BaseJavaMigration {
 		String insertBookAuth = "insert into book_author (book, author) values (?, ?);";
 		try (PreparedStatement insert = context.getConnection().prepareStatement(insertBookAuth)) {
 			for (BookDto book: books) {
-				for (AuthorDto author : book.getAuthors()) {
+				for (AuthorDto.AuthorDtoLt author : book.getAuthors()) {
 					insert.setObject(1, book.getId());
 					insert.setObject(2, author.getId());
 
@@ -205,7 +205,7 @@ public class V1_7__InitData extends BaseJavaMigration {
 						.collect(Collectors.toSet()) 	// Use set to prevent same genre from being selected twice.
 				));
 
-				for (GenreDto g : book.getGenres()) {
+				for (GenreDto.GenreDtoLt g : book.getGenres()) {
 					insert.setObject(1, book.getId());
 					insert.setObject(2, g.getId());
 
