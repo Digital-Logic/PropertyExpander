@@ -45,6 +45,7 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	public BookDto getBook(UUID id, @Nullable String expand) {
+
 		return new BookDto(bookRepository.findById(id, bookGraphBuilder.createResolver(expand))
 			.orElseThrow(() ->
 				new NotFoundException(new ErrorMessage("Book by id: " + id + ", not found.")))

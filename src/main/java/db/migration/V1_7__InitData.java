@@ -58,6 +58,7 @@ public class V1_7__InitData extends BaseJavaMigration {
 		// Generate Genres
 		// Store genres in a hashmap to prevent duplicate names
 		Map<String, GenreDto> genres = new HashMap<>();
+
 		for (int i = 0; i < 20; ++i) {
 			GenreDto genre = GenreDto.builder()
 				.id(UUID.randomUUID())
