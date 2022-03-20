@@ -1,6 +1,6 @@
 # PropertyExpander Sample
 
-This is a sample projected that demonstrates how to dynamically load entity relations through a request parameter. For an example.
+This is a sample project that demonstrates how to dynamically load entity relations through a request parameter. For an example.
 
 `GET server:port/api/book/{id}?expand=authors`
 
